@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Azure DevOps</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .output-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .output-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .status-bar {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .status-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .status-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .phase-indicator {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .phase {
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: #f5f5f5;
+            color: #999;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .phase.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .phase.complete {
+            background: #4caf50;
+            color: white;
+        }
+
+        .output-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .output-line {
+            margin-bottom: 5px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .output-line.error {
+            color: #f44336;
+        }
+
+        .output-line.success {
+            color: #4caf50;
+        }
+
+        .output-line.info {
+            color: #2196f3;
+        }
+
+        .output-line.warning {
+            color: #ff9800;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .summary-card.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .summary-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            color: #333;
+        }
+
+        .file-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .file-list li {
+            padding: 5px 0;
+            color: #667eea;
+        }
+
+        .file-list li:before {
+            content: "📄 ";
+            margin-right: 5px;
+        }
+
+        .pr-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pr-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-info {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .project-info.active {
+            display: block;
+        }
+
+        .project-info-title {
+            font-weight: 600;
+            color: #0277bd;
+            margin-bottom: 8px;
+        }
+
+        .project-info-item {
+            padding: 3px 0;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-card {
+                padding: 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Agentic AI Azure DevOps</h1>
+            <p>Automated workflow execution from work item to pull request</p>
+        </div>
+
+        <div class="main-card">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="workItemId">Work Item ID</label>
+                    <input
+                        type="text"
+                        id="workItemId"
+                        placeholder="Enter work item number (e.g., 123)"
+                        autofocus
+                    >
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="forceReindex">
+                        <label for="forceReindex">Force rebuild code embeddings cache (slower but fresh)</label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="startBtn" onclick="startWorkflow()">
+                        Start Workflow
+                    </button>
+                    <button class="btn btn-secondary" id="clearBtn" onclick="clearOutput()">
+                        Clear Output
+                    </button>
+                </div>
+            </div>
+
+            <div class="output-section" id="outputSection">
+                <div class="status-bar">
+                    <div class="status-item">
+                        <span class="status-label">Work Item ID:</span>
+                        <span class="status-value" id="statusWorkItem">-</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Current Phase:</span>
+                        <span class="status-value" id="statusPhase">-</span>
+                    </div>
+                </div>
+
+                <div class="project-info" id="projectInfo">
+                    <div class="project-info-title">Project Information</div>
+                    <div class="project-info-item" id="projectLanguage"></div>
+                    <div class="project-info-item" id="projectFrameworks"></div>
+                    <div class="project-info-item" id="projectFiles"></div>
+                </div>
+
+                <div class="phase-indicator" id="phaseIndicator">
+                    <div class="phase" data-phase="initialization">Initialization</div>
+                    <div class="phase" data-phase="planning">Planning</div>
+                    <div class="phase" data-phase="branch">Branch</div>
+                    <div class="phase" data-phase="implementation">Implementation</div>
+                    <div class="phase" data-phase="testing">Testing</div>
+                    <div class="phase" data-phase="validation">Validation</div>
+                    <div class="phase" data-phase="commit">Commit</div>
+                    <div class="phase" data-phase="pr">Pull Request</div>
+                </div>
+
+                <div class="output-box" id="outputBox">
+                    <div class="output-line info">Waiting for workflow to start...</div>
+                </div>
+
+                <div class="summary-card" id="summaryCard">
+                    <div class="summary-title">Workflow Complete!</div>
+                    <div class="summary-item">
+                        <div class="summary-label">Work Item</div>
+                        <div class="summary-value" id="summaryTitle">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Branch</div>
+                        <div class="summary-value" id="summaryBranch">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Files Created</div>
+                        <ul class="file-list" id="summaryFiles"></ul>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Tests Created</div>
+                        <ul class="file-list" id="summaryTests"></ul>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Pull Request</div>
+                        <a href="#" id="summaryPrLink" class="pr-link" target="_blank">View Pull Request</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let currentWorkItemId = null;
+
+        function startWorkflow() {
+            const workItemId = document.getElementById('workItemId').value.trim();
+            const forceReindex = document.getElementById('forceReindex').checked;
+
+            if (!workItemId) {
+                alert('Please enter a work item ID');
+                return;
+            }
+
+            // Show output section
+            document.getElementById('outputSection').classList.add('active');
+            document.getElementById('summaryCard').classList.remove('active');
+            document.getElementById('projectInfo').classList.remove('active');
+
+            // Clear output
+            const outputBox = document.getElementById('outputBox');
+            outputBox.innerHTML = '<div class="output-line info">Starting workflow...</div>';
+
+            // Reset phases
+            document.querySelectorAll('.phase').forEach(phase => {
+                phase.classList.remove('active', 'complete');
+            });
+
+            // Update status
+            document.getElementById('statusWorkItem').textContent = workItemId;
+            document.getElementById('statusPhase').textContent = 'Starting...';
+
+            // Disable start button
+            const startBtn = document.getElementById('startBtn');
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<span class="spinner"></span>Running...';
+
+            // Start workflow
+            fetch('/api/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    work_item_id: workItemId,
+                    force_reindex: forceReindex
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    addOutputLine('error', `Error: ${data.error}`);
+                    resetStartButton();
+                } else {
+                    currentWorkItemId = workItemId;
+                    connectEventStream(workItemId);
+                }
+            })
+            .catch(error => {
+                addOutputLine('error', `Error: ${error.message}`);
+                resetStartButton();
+            });
+        }
+
+        function connectEventStream(workItemId) {
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            eventSource = new EventSource(`/api/stream/${workItemId}`);
+
+            eventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+
+                switch(data.type) {
+                    case 'phase':
+                        updatePhase(data.phase, data.message);
+                        addOutputLine('info', `\n=== ${data.message} ===\n`);
+                        break;
+
+                    case 'status':
+                        addOutputLine('info', data.message);
+                        break;
+
+                    case 'output':
+                        addOutputLine('', data.message);
+                        break;
+
+                    case 'error':
+                        addOutputLine('error', `ERROR: ${data.message}`);
+                        break;
+
+                    case 'step':
+                        addOutputLine('info', `Step ${data.step}/${data.total}: ${data.description}`);
+                        break;
+
+                    case 'project_info':
+                        displayProjectInfo(data.info);
+                        break;
+
+                    case 'complete':
+                        displaySummary(data.summary);
+                        markPhaseComplete();
+                        resetStartButton();
+                        break;
+
+                    case 'done':
+                        eventSource.close();
+                        resetStartButton();
+                        break;
+
+                    case 'keepalive':
+                        // Ignore keepalive messages
+                        break;
+                }
+            };
+
+            eventSource.onerror = function(error) {
+                console.error('EventSource error:', error);
+                eventSource.close();
+                addOutputLine('error', 'Connection lost');
+                resetStartButton();
+            };
+        }
+
+        function updatePhase(phase, message) {
+            document.getElementById('statusPhase').textContent = message;
+
+            // Mark previous phases as complete
+            let foundCurrent = false;
+            document.querySelectorAll('.phase').forEach(el => {
+                const phaseData = el.getAttribute('data-phase');
+                if (phaseData === phase) {
+                    el.classList.add('active');
+                    foundCurrent = true;
+                } else if (!foundCurrent) {
+                    el.classList.add('complete');
+                    el.classList.remove('active');
+                } else {
+                    el.classList.remove('active', 'complete');
+                }
+            });
+        }
+
+        function markPhaseComplete() {
+            document.querySelectorAll('.phase').forEach(el => {
+                el.classList.add('complete');
+                el.classList.remove('active');
+            });
+            document.getElementById('statusPhase').textContent = 'Complete!';
+        }
+
+        function addOutputLine(type, message) {
+            const outputBox = document.getElementById('outputBox');
+            const line = document.createElement('div');
+            line.className = `output-line ${type}`;
+            line.textContent = message;
+            outputBox.appendChild(line);
+            outputBox.scrollTop = outputBox.scrollHeight;
+        }
+
+        function displayProjectInfo(info) {
+            document.getElementById('projectInfo').classList.add('active');
+            document.getElementById('projectLanguage').textContent = `Language: ${info.primary_language}`;
+            document.getElementById('projectFrameworks').textContent = `Frameworks: ${info.frameworks.join(', ') || 'None detected'}`;
+            document.getElementById('projectFiles').textContent = `Total Files: ${info.total_files}`;
+        }
+
+        function displaySummary(summary) {
+            document.getElementById('summaryCard').classList.add('active');
+            document.getElementById('summaryTitle').textContent = `#${summary.work_item_id}: ${summary.work_item_title}`;
+            document.getElementById('summaryBranch').textContent = summary.branch_name;
+
+            const filesList = document.getElementById('summaryFiles');
+            filesList.innerHTML = '';
+            summary.implementation_files.forEach(file => {
+                const li = document.createElement('li');
+                li.textContent = file;
+                filesList.appendChild(li);
+            });
+
+            const testsList = document.getElementById('summaryTests');
+            testsList.innerHTML = '';
+            summary.test_files.forEach(test => {
+                const li = document.createElement('li');
+                li.textContent = test;
+                testsList.appendChild(li);
+            });
+
+            const prLink = document.getElementById('summaryPrLink');
+            if (summary.pr_url) {
+                prLink.href = summary.pr_url;
+                prLink.style.display = 'inline-block';
+            } else {
+                prLink.style.display = 'none';
+            }
+
+            addOutputLine('success', '\n=== WORKFLOW COMPLETE ===\n');
+        }
+
+        function resetStartButton() {
+            const startBtn = document.getElementById('startBtn');
+            startBtn.disabled = false;
+            startBtn.innerHTML = 'Start Workflow';
+        }
+
+        function clearOutput() {
+            document.getElementById('outputSection').classList.remove('active');
+            document.getElementById('workItemId').value = '';
+            document.getElementById('forceReindex').checked = false;
+            if (eventSource) {
+                eventSource.close();
+            }
+            resetStartButton();
+        }
+
+        // Allow Enter key to start workflow
+        document.getElementById('workItemId').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                startWorkflow();
+            }
+        });
+    </script>
+</body>
+</html>

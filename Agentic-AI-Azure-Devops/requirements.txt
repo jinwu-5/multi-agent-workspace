@@ -1,0 +1,27 @@
+# Azure & OpenAI
+openai>=1.12.0
+azure-identity>=1.15.0
+
+# Environment
+python-dotenv>=1.0.0
+
+# RAG & Embeddings
+numpy>=1.26.0
+chromadb>=0.4.22
+sentence-transformers>=2.3.1
+langchain>=0.1.0
+langchain-openai>=0.0.5
+
+# Git Operations
+GitPython>=3.1.41
+
+# LangGraph
+langgraph>=0.0.20
+
+# Utilities
+pydantic>=2.5.0
+aiofiles>=23.2.1
+
+# Web UI
+flask>=3.0.0
+flask-cors>=4.0.0

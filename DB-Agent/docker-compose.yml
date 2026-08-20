@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  multi-db-agent:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # API Configuration
+      - APP_API_KEY=${APP_API_KEY:-your-secure-api-key}
+
+      # Azure OpenAI Configuration
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-2023-12-01-preview}
+
+      # Database Connections
+      - DVDRENTAL_PG_CONN=${DVDRENTAL_PG_CONN}
+      - AIRBNB_MONGO_CONN=${AIRBNB_MONGO_CONN}
+      - AIRBNB_MONGO_DB=${AIRBNB_MONGO_DB:-mongo}
+      - AIRBNB_MONGO_COLLECTION=${AIRBNB_MONGO_COLLECTION:-airbnb}
+
+      # Default Database
+      - DEFAULT_DATABASE=${DEFAULT_DATABASE:-dvdrental}
+    volumes:
+      # Mount .env file if present
+      - ./.env:/app/.env:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+networks:
+  default:
+    driver: bridge
